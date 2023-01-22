@@ -3,16 +3,15 @@ from typing import Any, Dict, Hashable
 
 from flask import jsonify, request
 
-from . import app
-from .models import URLMap
-from .utils import get_or_create_urlmap
-from .validators import ApiURLMapValidator
-from .api_error_handlers import InvalidAPIUsage
+from . import api
+from ..models import URLMap
+from ..utils import get_or_create_urlmap
+from .api_error_handlers import InvalidAPIUsage, ApiURLMapValidator
 
 is_valid = ApiURLMapValidator()
 
 
-@app.route('/api/id/', methods=('POST',))
+@api.route('/id/', methods=('POST',))
 def create_id():
     data: Dict[Hashable, Any] = request.get_json()
     is_valid(data)
@@ -24,7 +23,7 @@ def create_id():
     return jsonify(urlmap.to_dict()), HTTPStatus.CREATED.value
 
 
-@app.route('/api/id/<string:short_id>/', methods=('GET',))
+@api.route('/id/<string:short_id>/', methods=('GET',))
 def get_url(short_id: str):
     urlmap: URLMap = URLMap.query.filter_by(short=short_id).first()
     if not urlmap:

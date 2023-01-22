@@ -1,28 +1,9 @@
 from http import HTTPStatus
 
-from wtforms.validators import ValidationError
+from flask import jsonify
 
+from . import api
 from settings import LETTERS, MAX_LENGTH, MIN_LENGTH
-from .api_error_handlers import InvalidAPIUsage
-
-
-class Letters:
-    def __init__(self, sighns=LETTERS, message=None) -> None:
-        self.sighns = sighns
-        if not message:
-            message = (
-                'Допустимые символы: '
-                'большие латинские буквы, '
-                'маленькие латинские буквы, '
-                'цифры в диапазоне от 0 до 9.'
-            )
-        self.message = message
-
-    def __call__(self, form, field) -> None:
-        string = field.data
-        for sighn in string:
-            if sighn not in self.sighns:
-                raise ValidationError(self.message)
 
 
 class ApiURLMapValidator:
@@ -37,7 +18,6 @@ class ApiURLMapValidator:
         if not message:
             message = "Отсутствует тело запроса"
         self.message = message
-
 
     def __call__(self, data):
         if not data:
@@ -65,3 +45,21 @@ class ApiURLMapValidator:
                     raise InvalidAPIUsage(
                         'Указано недопустимое имя для короткой ссылки'
                     )
+
+
+class InvalidAPIUsage(Exception):
+    status_code = HTTPStatus.BAD_REQUEST.value
+
+    def __init__(self, message, status_code: int = None) -> None:
+        super().__init__()
+        self.message = message
+        if status_code:
+            self.status_code = status_code
+
+    def to_dict(self):
+        return dict(message=self.message)
+
+
+@api.app_errorhandler(InvalidAPIUsage)
+def invalid_api_usage(error: InvalidAPIUsage):
+    return jsonify(error.to_dict()), error.status_code

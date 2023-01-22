@@ -9,4 +9,9 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from . import api_error_handlers, api_views, forms, models, utils, validators,views_error_handlers, views
+from .api import api as api_blueprint
+app.register_blueprint(api_blueprint)
+from .main import main as main_blueprint
+app.register_blueprint(main_blueprint)
+
+from . import models, utils
