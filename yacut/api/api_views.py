@@ -3,10 +3,10 @@ from typing import Any, Dict, Hashable
 
 from flask import jsonify, request
 
-from . import api
 from ..models import URLMap
 from ..utils import get_or_create_urlmap
-from .api_error_handlers import InvalidAPIUsage, ApiURLMapValidator
+from . import api
+from .api_error_handlers import ApiURLMapValidator, InvalidAPIUsage
 
 is_valid = ApiURLMapValidator()
 

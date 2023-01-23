@@ -16,7 +16,7 @@ class ApiURLMapValidator:
         self.min_length = min_length
         self.max_length = max_length
         if not message:
-            message = "Отсутствует тело запроса"
+            message = 'Отсутствует тело запроса'
         self.message = message
 
     def __call__(self, data):

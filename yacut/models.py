@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Any, Dict, Hashable
 from urllib.parse import urljoin
+
 from flask import request
+
 from . import db
 
 

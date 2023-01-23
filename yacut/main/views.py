@@ -14,11 +14,11 @@ def index_view():
         custom = form.custom_id.data
         if custom and URLMap.query.filter_by(short=custom).first():
             flash(message=f'Имя {custom} уже занято!')
-            return render_template('index.html', form=form)
+            return render_template('main/index.html', form=form)
         urlmap = get_or_create_urlmap(original, custom)
         flash(message='Ваша новая ссылка готова:')
         flash(message=Markup(urlmap))
-    return render_template('index.html', form=form)
+    return render_template('main/index.html', form=form)
 
 
 @main.route('/<string:short>')
